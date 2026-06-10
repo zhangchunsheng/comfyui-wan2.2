@@ -1,0 +1,73 @@
+{
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 123456,
+      "steps": 30,
+      "cfg": 7.0,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "flow",
+      "denoising_strength": 1.0,
+      "model": ["4", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["8", 0]
+    }
+  },
+  "4": {
+    "class_type": "Wan22ModelLoader",
+    "inputs": {
+      "ckpt_name": "wan2.2_t2v_5B_fp16.safetensors",
+      "vae_name": "wan2.2_vae.safetensors",
+      "text_encoder_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "load_text_encoder": true,
+      "load_vae": true,
+      "fp8_optimization": true
+    }
+  },
+  "6": {
+    "class_type": "Wan22CLIPTextEncode",
+    "inputs": {
+      "text": "A beautiful sunset over sea, gentle waves, smooth camera slow pan, realistic lighting, 8k, high detail, smooth video, no flicker",
+      "clip": ["4", 1]
+    }
+  },
+  "7": {
+    "class_type": "Wan22CLIPTextEncode",
+    "inputs": {
+      "text": "blurry, low resolution, distorted limbs, flicker, shaking video, watermark, text, ugly, deformed, noisy, frame jump",
+      "clip": ["4", 1]
+    }
+  },
+  "8": {
+    "class_type": "Wan22EmptyLatentVideo",
+    "inputs": {
+      "width": 1280,
+      "height": 720,
+      "length": 16
+    }
+  },
+  "9": {
+    "class_type": "Wan22VAELoader",
+    "inputs": {
+      "vae": ["4", 2],
+      "samples": ["3", 0]
+    }
+  },
+  "10": {
+    "class_type": "VideoCombine",
+    "inputs": {
+      "images": ["9", 0],
+      "frame_rate": 16,
+      "format": "mp4_h264",
+      "crf": 23
+    }
+  },
+  "11": {
+    "class_type": "PreviewVideo",
+    "inputs": {
+      "video": ["10", 0]
+    }
+  }
+}
+
